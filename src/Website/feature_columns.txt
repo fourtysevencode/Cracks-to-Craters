@@ -1,0 +1,7 @@
+avg_rainfall_mm
+traffic_volume_vph
+pavement_age_yrs
+last_repair_yrs
+soil_type_clay
+soil_type_gravel
+soil_type_sandy
