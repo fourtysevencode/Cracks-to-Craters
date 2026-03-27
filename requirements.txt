@@ -5,7 +5,4 @@ numpy
 joblib
 pydantic
 openai
-<<<<<<< HEAD:requirments.txt
 jinja2
-=======
->>>>>>> 5deb4cc463cd222cacd7015bbb7c84c1114df1f4:requirements.txt
