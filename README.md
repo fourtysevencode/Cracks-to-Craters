@@ -145,9 +145,6 @@ uvicorn app:app --reload
 ```
 ---
 
-## License
-MIT License
-
 ## Authors
 Ronak Pal,
 Osh Singh,
