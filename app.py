@@ -30,17 +30,17 @@ class InputData(BaseModel):
     soil_type: str
 
 
-# HOME PAGE
+# ---------------- HOME ----------------
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse(request, "index.html")
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
-# PREDICTION ROUTE (UNCHANGED)
+# ---------------- PREDICT ----------------
 @app.post("/predict")
 def predict(data: InputData):
     try:
-        soil = data.soil_type
+        soil = data.soil_type 
 
         features = {col: 0.0 for col in FEATURE_COLUMNS}
 
@@ -60,55 +60,57 @@ def predict(data: InputData):
         return {"prediction": f"Error: {e}"}
 
 
-# ------------------- CHATBOT STARTS HERE -------------------
+# ---------------- CHATBOT ----------------
 
 def generate_advice(prediction):
     if prediction == 1:
-        return "High Risk: Avoid this road, especially in rain. Slow down and maintain distance."
+        return "High Risk: Avoid this road, especially during rain. Reduce speed and maintain distance."
     elif prediction == 0:
-        return "Low Risk: Road seems safe, but stay alert."
+        return "Low Risk: Road seems relatively safe, but stay alert."
     else:
-        return "Moderate Risk: Drive carefully and avoid waterlogged areas."
+        return "Moderate Risk: Drive carefully and avoid waterlogged patches."
 
 
 @app.post("/chat")
 async def chat(message: dict = Body(...)):
     user_input = message.get("message", "").lower()
 
-    try:
-        rainfall = None
-        traffic = None
+    rainfall = None
+    traffic = None
 
-        words = user_input.split()
+    # Extract rainfall (handles decimals like 80.5)
+    for word in user_input.split():
+        try:
+            rainfall = float(word)
+        except:
+            pass
 
-        # Extract rainfall
-        for word in words:
-            if word.isdigit():
-                rainfall = float(word)
+    # Detect traffic level
+    if "high traffic" in user_input:
+        traffic = 2000
+    elif "medium traffic" in user_input:
+        traffic = 1000
+    elif "low traffic" in user_input:
+        traffic = 300
 
-        # Detect traffic level
-        if "high traffic" in user_input:
-            traffic = 2000
-        elif "medium traffic" in user_input:
-            traffic = 1000
-        elif "low traffic" in user_input:
-            traffic = 300
+    # Run model if valid input
+    if rainfall is not None and traffic is not None:
+        X = np.array([[rainfall, traffic, 5, 2, 0, 1, 0]])
+        prediction = model.predict(X)[0]
 
-        # If valid inputs → run model
-        if rainfall and traffic:
-            X = np.array([[rainfall, traffic, 5, 2, 0, 1, 0]])
-            prediction = model.predict(X)[0]
+        # Better risk labeling
+        if prediction == 1:
+            risk_label = "High Risk"
+        elif prediction == 0:
+            risk_label = "Low Risk"
+        else:
+            risk_label = "Moderate Risk"
 
-            advice = generate_advice(prediction)
-
-            return {
-                "response": f"Tanya:\nPrediction: {prediction}\n{advice}"
-            }
-
-        # If inputs missing
         return {
-            "response": "Tanya: Please enter rainfall (number) and traffic (high/medium/low). Example: rainfall 60 high traffic"
+            "response": f"Tanya:\nRisk: {risk_label}\n{generate_advice(prediction)}"
         }
 
-    except Exception as e:
-        return {"response": f"Tanya: Error - {e}"}
+    # If input incomplete
+    return {
+        "response": "Tanya: Please enter rainfall (number) and traffic (high/medium/low).\nExample: rainfall 60 high traffic"
+    }
