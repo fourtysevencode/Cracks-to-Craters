@@ -5,46 +5,145 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: sans-serif; background: #f4f4f4; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
-    .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 2rem; width: 100%; max-width: 420px; }
-    header { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
-    input { display: block; width: 100%; margin-bottom: 10px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
-    input:focus { border-color: #555; }
-    button { width: 100%; margin-top: 6px; padding: 11px; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; }
-    button:hover { background: #333; }
-    #result { margin-top: 1rem; font-size: 14px; color: #555; }select { display: block; width: 100%; margin-bottom: 10px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    header {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    input, select {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+
+    input:focus {
+      border-color: #555;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 6px;
+      padding: 11px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #333;
+    }
+
+    #result {
+      margin-top: 1rem;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* CHATBOX STYLE */
+    #chatbox {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 280px;
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    #chatlog {
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
+
 <body>
+
   <div class="card">
     <header>Pothole Risk Prediction</header>
+
     <input id="f1" placeholder="Average Rainfall (mm)">
     <input id="f2" placeholder="Traffic Volume (Vehicles per hour)">
     <input id="f3" placeholder="Pavement Age (years)">
     <input id="f4" placeholder="Last Repair (years)">
+
     <select id="f5">
-        <option value="clay">Clay</option>
-        <option value="gravel">Gravel</option>
-        <option value="sandy">Sandy</option>
+      <option value="clay">Clay</option>
+      <option value="gravel">Gravel</option>
+      <option value="sandy">Sandy</option>
     </select>
+
     <button onclick="predict()">Predict</button>
+
     <p id="result"></p>
   </div>
+
+  <!-- CHATBOX -->
+  <div id="chatbox">
+    <div id="chatlog"></div>
+
+    <input id="msg" placeholder="Ask Tanya...">
+    <button onclick="sendMsg()">Send</button>
+  </div>
+
+  <!-- SCRIPTS -->
   <script>
     async function predict() {
-        const res = await fetch("/predict", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                "avg_rainfall_mm": parseFloat(f1.value),
-                "traffic_volume_vph": parseFloat(f2.value),
-                "pavement_age_yrs": parseFloat(f3.value),
-                "last_repair_yrs": parseFloat(f4.value),
-                "soil_type": f5.value
-        }) // sends this json to the backend
-    })
-        const data = await res.json()
-        result.innerText = data.prediction ?? "invalid input"
-}
+      const res = await fetch("/predict", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          "avg_rainfall_mm": parseFloat(f1.value),
+          "traffic_volume_vph": parseFloat(f2.value),
+          "pavement_age_yrs": parseFloat(f3.value),
+          "last_repair_yrs": parseFloat(f4.value),
+          "soil_type": f5.value
+        })
+      });
+
+      const data = await res.json();
+      result.innerText = data.prediction ?? "invalid input";
+    }
+
+    async function sendMsg() {
+      let msg = document.getElementById("msg").value;
+
+      let res = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: msg})
+      });
+
+      let data = await res.json();
+
+      document.getElementById("chatlog").innerHTML +=
+        "<p><b>You:</b> " + msg + "</p>" +
+        "<p><b>" + data.response + "</b></p>";
+    }
   </script>
+
 </body>
 </html>
