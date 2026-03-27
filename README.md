@@ -132,17 +132,17 @@ POST /predict
 ---
 
 ## Installation
-
+```bash
 git clone https://github.com/yourusername/cracks-to-craters.git  
 cd cracks-to-craters  
 pip install -r requirements.txt  
-
+```
 ---
 
 ## Run
-
+```bash
 uvicorn app:app --reload  
-
+```
 ---
 
 ## License
