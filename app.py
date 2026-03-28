@@ -105,3 +105,7 @@ def chat(message: chatinput):
 
     except Exception as e:
         return {"response": f"Error: {e}"}
+
+@app.get("/health")
+def health():
+    return {"status":"alive"}
