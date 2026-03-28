@@ -78,7 +78,8 @@ This system:
 - FastAPI  
 - Scikit-learn  
 - Pandas  
-- NumPy  
+- NumPy
+- Pydantic
 
 ---
 
