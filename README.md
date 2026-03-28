@@ -113,7 +113,7 @@ Logistic Multivariable Regression
 ### Endpoint
 ```
 POST /predict
-POST /chat
+POST /chat?message=yourmessagehere
 ```
 
 ### Request
