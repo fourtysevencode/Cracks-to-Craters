@@ -6,3 +6,4 @@ joblib
 pydantic
 openai
 jinja2
+python-dotenv
