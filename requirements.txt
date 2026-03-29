@@ -2,7 +2,7 @@ fastapi
 uvicorn
 scikit-learn
 numpy
-joblib
+pickle
 pydantic
 openai
 jinja2
