@@ -3,6 +3,8 @@ AI-Based Road Damage Detection & Risk Prediction
 
 Try it out at https://cracks-to-craters.onrender.com/
 
+Find the python notebook detailing the training of the model in `Notebooks\Pothole-formation-risk-model`
+
 ---
 
 ## Overview
