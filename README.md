@@ -105,6 +105,8 @@ Logistic Multivariable Regression
 
 ![Graph 1](graphs/GRAPH1.png)  
 ![Graph 2](graphs/GRAPH2.png)
+### Confusion Matrix
+![Confusion Matrix](graphs/confusion__matrix.png)
 
 ---
 
