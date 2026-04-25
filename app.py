@@ -33,7 +33,6 @@ async def home(request: Request):
 
 @app.post("/predict")
 def predict(data: InputData):
-        
         try:
             soil = data.soil_type 
 
