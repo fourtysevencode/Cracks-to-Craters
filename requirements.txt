@@ -1,8 +1,7 @@
 fastapi
 uvicorn
 scikit-learn
-numpy
-pickle
+numpy>=1.26.0  # Compatible with Python 3.9 through 3.12
 pydantic
 jinja2
 python-dotenv
