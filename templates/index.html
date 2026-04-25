@@ -92,12 +92,12 @@ button:active {
   transform: scale(0.98);
 }
 
-#result, #assistant_response {
+#result {
   margin-top: 1rem;
   font-size: 17px;
   color: #374151;
   overflow-y: auto; /* scroll instead of expand */
-  max-height: 250px; /* controls chat output area */
+  max-height: 250px;
   padding-right: 4px;
 }
   </style>
@@ -117,13 +117,6 @@ button:active {
     <button onclick="predict()">Predict</button>
     <p id="result"></p>
   </div>
-  <div class="card">
-    <header>Chat with Tanya - Your Road Safety Advisor</header>
-    <input id="chat" placeholder="Ask">
-    <button onclick="sendMessage()">Send</button>
-    <p id="assistant_response"></p>
-  </div>
-
   <script>
     async function predict() {
         const res = await fetch("/predict", {
@@ -141,19 +134,6 @@ button:active {
         result.innerText = data.prediction ?? "invalid input"
     }
 
-    async function sendMessage() {
-        const res = await fetch("/chat", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({
-            "message":chat.value
-          })
-        }) // sends this to the api
-        const response_json = await res.json() // response form the backend
-        assistant_response.innerText = response_json.response ?? "Error getting response"
-
-        document.getElementById("chat").value = "" // reset input field
-    }
   </script>
 </body>
 </html>
