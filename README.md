@@ -18,7 +18,6 @@ Cracks to Craters is a machine learning system designed to detect and predict ro
 - ML-based classification model  
 - FastAPI backend for real-time predictions  
 - Scalable deployment (local + cloud)
-- Tanya, your AI road safety advisor (powered by GPT5-NANO)
 
 ---
 
@@ -117,7 +116,6 @@ Logistic Multivariable Regression
 ### Endpoint
 ```
 POST /predict
-POST /chat
 ```
 
 ### Request
